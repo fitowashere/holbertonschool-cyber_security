@@ -84,6 +84,25 @@ Your identification has been saved in ~/.ssh/id_rsa
 Your public key has been saved in ~/.ssh/id_rsa.pub
 ```
 
+4. Process Monitor
+    - File: 4-root_process.sh
+    Create a Bash script that monitors all processes started by a specified user.
+    Requirements:
+
+    - Script should accept user as first argument
+    Use grep -v to exclude processes with VSZ and RSS values of 0
+    Should use ps command
+    Output may vary depending on active processes
+
+### Example:
+```
+┌──(yosri㉿hbtn-lab)-[…/cybersecurity_basics/0x00_introduction_cybersecurity]
+└─$ ./4-root_process.sh root
+root           1  0.0  0.0  21172 12376 ?        Ss   07:38   0:01 /sbin/init splash
+root         598  0.0  0.1  66380 19908 ?        Ss   07:39   0:00 /lib/systemd/systemd-journald
+[...]
+```
+
 ## Environment
 
 - Kali Linux (Virtual Machine)
@@ -94,14 +113,14 @@ Your public key has been saved in ~/.ssh/id_rsa.pub
 ## Setup Instructions
 
 1. Clone the repository:
-```
+    ```
     git clone https://github.com/[your-username]/holbertonschool-cyber_security.git
-```
+    ```
 
 2. Navigate to the project directory:
-```
+    ```
     cd holbertonschool-cyber_security/cybersecurity_basics/0x00_introduction_cybersecurity
-```
+    ```
 
 3. Make scripts executable:
     ```
@@ -113,27 +132,49 @@ Your public key has been saved in ~/.ssh/id_rsa.pub
 ### To test the SHA256 validator:
 
 1. Create a test file:
-```
+    ```
     echo "Hello World" > test_file
-```
+    ```
 
 2. Generate SHA256 hash:
-```
+    ```
     sha256sum test_file
-```
+    ```
 
 3. Validate the file:
-```
+    ```
    ./2-sha256_validator.sh test_file <generated_hash>
-```
+    ```
 
 ## Verifying SSH Keys
 
 ### To verify the generated SSH keys:
-```
--l ~/.ssh/
-cat ~/.ssh/id_rsa.pub  # View your public key
-```
+    ```
+    -l ~/.ssh/
+    cat ~/.ssh/id_rsa.pub  # View your public 
+    ```
+
+## Testing Process Monitor
+
+### To test the process monitor script:
+
+1. Test with root user:
+    ```
+    /4-root_process.sh root
+    ```
+
+2. Test with current user:
+    ```
+    ./4-root_process.sh yourUser
+    ```
+3. Create test processes:
+    ```
+    sleep 100 & 
+    top &
+    ./4-root_process.sh yourUser
+    killall sleep top  # cleanup
+    ```
+
 ## Resources
 
 - Linux command line basics
@@ -146,3 +187,5 @@ cat ~/.ssh/id_rsa.pub  # View your public key
 - Understanding cryptographic hash functions
 - SSH key generation and management
 - Public key cryptography basics
+- Process monitoring and management in Linux
+- Understanding Linux process states and attributes
