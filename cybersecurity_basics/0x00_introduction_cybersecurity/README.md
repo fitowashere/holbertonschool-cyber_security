@@ -20,9 +20,9 @@ File: 0-release.sh
 Write a bash script that displays the system's Distribution ID in a concise single-line output.
 Requirements:
 
-Script must be exactly one line long (not counting the shebang line)
-Must not use awk
-Output should display only the Distribution ID (e.g., "Kali")
+    - Script must be exactly one line long (not counting the shebang line)
+    Must not use awk
+    Output should display only the Distribution ID (e.g., "Kali")
 
 ### Example:
 ```
@@ -30,7 +30,23 @@ Output should display only the Distribution ID (e.g., "Kali")
 └─$ ./0-release.sh
 Kali
 ```
+1. Password Generator
+File: 1-gen_password.sh
+Create a Bash script that generates a strong random password.
+Requirements:
 
+    - Script should be less than 3 lines long
+    Accept password length as an argument
+    Use /dev/urandom
+    Use [:alnum:] as character classes
+    Output may vary for each execution
+
+### Example:
+```
+┌──(yosri㉿hbtn-lab)-[…/cybersecurity_basics/0x00_introduction_cybersecurity]
+└─$ ./1-gen_password.sh 20
+MkPpprPyC3i6navUB3Lj
+```
 
 ## Environment
 
