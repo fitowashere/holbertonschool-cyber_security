@@ -9,13 +9,13 @@ holbertonschool-cyber_security/
 └── linux_security/
     └── 0x00_linux_security_basics/
         ├── 0-login.sh
+        ├── 1-active-connections.sh
         └── README.md
 ```
 
 ## Tasks
 
 ### 0. What secrets hold
-
 A script that displays the last 5 login sessions for users with their corresponding dates.
 
 #### Script: `0-login.sh`
@@ -39,10 +39,35 @@ sudo last -F -5
   root     ttyS0        Tue Oct 10 15:08:21 2023 - down   (19:26)
   ```
 
+### 1. Shows your Linux connections, not your social status!
+A script that displays a list of network socket connections with specific requirements.
+
+#### Script: `1-active-connections.sh`
+```bash
+#!/bin/bash
+sudo ss -tanp
+```
+
+- **Usage**: `sudo ./1-active-connections.sh`
+- **Features**:
+  - Uses the `ss` command from iproute2 5.x
+  - `-t`: Shows TCP sockets
+  - `-a`: Shows all sockets (listening and non-listening)
+  - `-n`: Displays numerical addresses (IP and ports)
+  - `-p`: Shows process information
+- **Output Example**:
+  ```
+  State   Recv-Q   Send-Q     Local Address:Port   Peer Address:Port   Process                                              
+  LISTEN  0        128        0.0.0.0:22           0.0.0.0:*
+  LISTEN  0        100        0.0.0.0:5000         0.0.0.0:*
+  LISTEN  0        5          127.0.0.1:5901       0.0.0.0:*          users:(("Xtigervnc",pid=923,fd=9))
+  ```
+
 ## Requirements
 - Linux operating system
 - Root or sudo privileges
 - Bash shell
+- iproute2 version 5.x
 
 ## Installation
 1. Clone the repository:
@@ -53,15 +78,16 @@ sudo last -F -5
    ```bash
    cd holbertonschool-cyber_security/linux_security/0x00_linux_security_basics
    ```
-3. Make the script executable:
+3. Make the scripts executable:
    ```bash
-   chmod +x 0-login.sh
+   chmod +x 0-login.sh 1-active-connections.sh
    ```
 
 ## Usage
-Run the script with sudo privileges:
+Run the scripts with sudo privileges:
 ```bash
 sudo ./0-login.sh
+sudo ./1-active-connections.sh
 ```
 
 ## License
