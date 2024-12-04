@@ -15,13 +15,20 @@ holbertonschool-cyber_security/
 ## Tasks
 
 ### 0. What secrets hold
+
 A script that displays the last 5 login sessions for users with their corresponding dates.
 
 #### Script: `0-login.sh`
+```bash
+#!/bin/bash
+sudo last -F -5
+```
+
 - **Usage**: `sudo ./0-login.sh`
 - **Features**:
-  - Displays the last 5 login sessions
-  - Shows full timestamps
+  - Uses the `last` command to display login history
+  - `-F` flag for full timestamps
+  - `-5` flag to limit output to 5 entries
   - Requires root privileges
 - **Output Example**:
   ```
@@ -56,3 +63,6 @@ Run the script with sudo privileges:
 ```bash
 sudo ./0-login.sh
 ```
+
+## License
+This project is part of the Holberton School Cyber Security curriculum.
