@@ -14,6 +14,7 @@ holbertonschool-cyber_security/
 │       ├── 1-gen_password.sh
 │       ├── 2-sha256_validator.sh
 │       ├── 3-ssh_keygen.sh
+│       ├── 4-root_process.sh
 │       └── README.md
 ```
 
@@ -25,8 +26,9 @@ holbertonschool-cyber_security/
     Requirements:
 
     - Script must be exactly one line long (not counting the shebang line)
-    Must not use awk
-    Output should display only the Distribution ID (e.g., "Kali")
+    - Must not use awk
+    - Should use specific flags with lsb_release (-si or -is)
+    - Output should display only the Distribution ID (e.g., "Kali")
 
 ### Example:
 ```
@@ -40,10 +42,10 @@ Kali
     Requirements:
 
     - Script should be less than 3 lines long
-    Accept password length as an argument
-    Use /dev/urandom
-    Use [:alnum:] as character classes
-    Output may vary for each execution
+    - Accept password length as an argument
+    - Use /dev/urandom
+    - Use [:alnum:] as character classes
+    - Output may vary for each execution
 
 ### Example:
 ```
@@ -57,8 +59,9 @@ MkPpprPyC3i6navUB3Lj
     Requirements:
 
     - Script should be less than 3 lines long
-    Can use echo command
-    Should validate file integrity using SHA256 hash
+    - Can use echo command
+    - Should validate file integrity using SHA256 
+    - Accept filename and hash as arguments
 
 ### Example:
 ```
@@ -69,11 +72,12 @@ test_file: OK
 3. RSA SSH Key Generator
     - File: 3-ssh_keygen.sh
     Create a Bash script that generates an RSA SSH key pair.
-    Requirements:
+    ### Requirements:
 
     - Key size should be 4096 bits
-    Should use OpenSSH
-    Keys should be generated in the default SSH directory (~/.ssh/)
+    - Should use OpenSSH
+    - Should accept key file path as an argument
+    - Uses the -N "" flag for empty passphrase
 
 ### Example:
 ```
@@ -87,12 +91,12 @@ Your public key has been saved in ~/.ssh/id_rsa.pub
 4. Process Monitor
     - File: 4-root_process.sh
     Create a Bash script that monitors all processes started by a specified user.
-    Requirements:
+   ### Requirements:
 
     - Script should accept user as first argument
-    Use grep -v to exclude processes with VSZ and RSS values of 0
-    Should use ps command
-    Output may vary depending on active processes
+    - Must use ps aux command
+    - Use grep -v to exclude processes with VSZ and RSS values of 0
+    - Output may vary depending on active processes
 
 ### Example:
 ```
@@ -125,54 +129,6 @@ root         598  0.0  0.1  66380 19908 ?        Ss   07:39   0:00 /lib/systemd/
 3. Make scripts executable:
     ```
     chmod +x *.sh
-    ```
-
-## Testing SHA256 Validator
-
-### To test the SHA256 validator:
-
-1. Create a test file:
-    ```
-    echo "Hello World" > test_file
-    ```
-
-2. Generate SHA256 hash:
-    ```
-    sha256sum test_file
-    ```
-
-3. Validate the file:
-    ```
-   ./2-sha256_validator.sh test_file <generated_hash>
-    ```
-
-## Verifying SSH Keys
-
-### To verify the generated SSH keys:
-    ```
-    -l ~/.ssh/
-    cat ~/.ssh/id_rsa.pub  # View your public 
-    ```
-
-## Testing Process Monitor
-
-### To test the process monitor script:
-
-1. Test with root user:
-    ```
-    /4-root_process.sh root
-    ```
-
-2. Test with current user:
-    ```
-    ./4-root_process.sh yourUser
-    ```
-3. Create test processes:
-    ```
-    sleep 100 & 
-    top &
-    ./4-root_process.sh yourUser
-    killall sleep top  # cleanup
     ```
 
 ## Resources
