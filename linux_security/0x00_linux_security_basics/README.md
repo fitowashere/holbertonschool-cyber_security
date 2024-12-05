@@ -134,6 +134,38 @@ sudo netstat -tunlp
   udp        0      0 0.0.0.0:68              0.0.0.0:*                           525/dhclient
   ```
 
+### 5. Where it talks, we all listen!
+A script that initiates a system audit using Lynis to scan the machine for security configurations and possible improvements.
+
+#### Script: `5-audit_system.sh`
+```bash
+#!/bin/bash
+sudo lynis audit system
+```
+
+- **Usage**: `sudo ./5-audit_system.sh`
+- **Features**:
+  - Performs comprehensive system security audit
+  - Checks system configuration
+  - Identifies security issues
+  - Provides recommendations
+- **Output Example**:
+  ```
+  [ Lynis 3.0.8 ]
+
+  ################################################################################
+    Lynis comes with ABSOLUTELY NO WARRANTY. This is free software, and you are
+    welcome to redistribute it under the terms of the GNU General Public License.
+    See the LICENSE file for details about using this software.
+  ################################################################################
+
+  [+] Initializing program
+  ------------------------------------
+    - Detecting OS...                                           [ DONE ]
+    - Checking profiles...                                      [ DONE ]
+  ```
+
+
 ## Requirements
 - Linux operating system
 - Root or sudo privileges
