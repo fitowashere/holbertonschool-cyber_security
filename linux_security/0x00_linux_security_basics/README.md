@@ -83,6 +83,32 @@ sudo ufw allow 80/tcp
   Rules updated (v6)
   ```
 
+### 3. Securing your network, one rule at a time!
+A script that lists all rules in the security table of the firewall with verbose output.
+
+#### Script: `3-firewall_rules.sh`
+```bash
+#!/bin/bash
+sudo iptables -v -L
+```
+
+- **Usage**: `sudo ./3-firewall_rules.sh`
+- **Features**:
+  - Lists all firewall rules
+  - Uses verbose mode for detailed output
+  - Shows packet and byte counts
+- **Output Example**:
+  ```
+  Chain INPUT (policy ACCEPT 0 packets, 0 bytes)
+   pkts bytes target     prot opt in     out     source               destination         
+
+  Chain FORWARD (policy ACCEPT 0 packets, 0 bytes)
+   pkts bytes target     prot opt in     out     source               destination         
+
+  Chain OUTPUT (policy ACCEPT 0 packets, 0 bytes)
+   pkts bytes target     prot opt in     out     source               destination
+  ```
+  
 ## Requirements
 - Linux operating system
 - Root or sudo privileges
