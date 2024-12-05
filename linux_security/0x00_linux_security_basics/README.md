@@ -165,7 +165,6 @@ sudo lynis audit system
     - Checking profiles...                                      [ DONE ]
   ```
 
-
 ## Requirements
 - Linux operating system
 - Root or sudo privileges
