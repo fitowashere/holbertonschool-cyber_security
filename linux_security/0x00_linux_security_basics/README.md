@@ -63,6 +63,26 @@ sudo ss -tanp
   LISTEN  0        5          127.0.0.1:5901       0.0.0.0:*          users:(("Xtigervnc",pid=923,fd=9))
   ```
 
+### 2. Firewall rules: Your network's first line of defense!
+A script that allows only incoming connections with the TCP protocol through port 80.
+
+#### Script: `2-incoming_connections.sh`
+```bash
+#!/bin/bash
+sudo ufw allow 80/tcp
+```
+
+- **Usage**: `sudo ./2-incoming_connections.sh`
+- **Features**:
+  - Uses UFW (Uncomplicated Firewall)
+  - Allows incoming TCP traffic on port 80
+  - Requires root privileges
+- **Output Example**:
+  ```
+  Rules updated
+  Rules updated (v6)
+  ```
+
 ## Requirements
 - Linux operating system
 - Root or sudo privileges
