@@ -165,6 +165,32 @@ sudo lynis audit system
     - Checking profiles...                                      [ DONE ]
   ```
 
+### 6. Your eyes and ears on the network!
+A script that captures and analyzes network traffic going through the system.
+
+#### Script: `6-capture_analyze.sh`
+```bash
+#!/bin/bash
+sudo tcpdump -c 5
+```
+
+- **Usage**: `sudo ./6-capture_analyze.sh`
+- **Features**:
+  - Uses tcpdump for packet capture
+  - `-c 5`: Limits capture to 5 packets
+  - Displays detailed packet information
+- **Output Example**:
+  ```
+  tcpdump: data link type LINUXSLL2
+  tcpdump: verbose output suppressed, use -v[v]... for full protocol decode
+  listening on any, link-type LINUX_SLL2 (Linux cooked v2), snapshot length 262144 bytes
+  09:10:03.397281 eth0  In  IP ip-6-19-0-167.eu-central-1.compute.internal.36014 > ip-6-19-156-8.eu-central-1.compute.internal.5000: Flags [P.], seq 3466652703:3466652721, ack 3521647673, win 24559, options [nop,nop,TS val 17390194 ecr 4276499227], length 18
+  [...]
+  5 packets captured
+  27 packets received by filter
+  0 packets dropped by kernel
+  ```
+
 ## Requirements
 - Linux operating system
 - Root or sudo privileges
