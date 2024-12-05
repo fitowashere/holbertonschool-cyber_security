@@ -108,7 +108,32 @@ sudo iptables -v -L
   Chain OUTPUT (policy ACCEPT 0 packets, 0 bytes)
    pkts bytes target     prot opt in     out     source               destination
   ```
-  
+
+### 4. See what's talking, and who's listening!
+A script that lists services, their current state, and their corresponding ports.
+
+#### Script: `4-network_services.sh`
+```bash
+#!/bin/bash
+sudo netstat -tunlp
+```
+
+- **Usage**: `sudo ./4-network_services.sh`
+- **Features**:
+  - Shows TCP sockets (`-t`)
+  - Shows UDP sockets (`-u`)
+  - Shows numerical addresses (`-n`)
+  - Shows only listening sockets (`-l`)
+  - Shows PID and program name (`-p`)
+- **Output Example**:
+  ```
+  Active Internet connections (only servers)
+  Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+  tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      881/sshd: /usr/sbin 
+  tcp        0      0 0.0.0.0:5000            0.0.0.0:*               LISTEN      913/python3
+  udp        0      0 0.0.0.0:68              0.0.0.0:*                           525/dhclient
+  ```
+
 ## Requirements
 - Linux operating system
 - Root or sudo privileges
