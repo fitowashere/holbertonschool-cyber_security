@@ -191,6 +191,33 @@ sudo tcpdump -c 5
   0 packets dropped by kernel
   ```
 
+### 7. So fast, it'll make your router sweat!
+A script that scans a subnetwork to discover live hosts using nmap.
+
+#### Script: `7-scan.sh`
+```bash
+#!/bin/bash
+sudo nmap "$1"
+```
+
+- **Usage**: `sudo ./7-scan.sh [target]`
+- **Example**: `sudo ./7-scan.sh www.holbertonschool.com`
+- **Features**:
+  - Uses nmap for network scanning
+  - Accepts target as command line argument
+  - Performs TCP port scanning
+  - Shows open ports and services
+- **Output Example**:
+  ```
+  Starting Nmap 7.94 ( https://nmap.org ) at 2023-10-19 15:46 UTC
+  Nmap scan report for www.holbertonschool.com (34.249.200.254)
+  Host is up (0.026s latency).
+  Not shown: 998 filtered tcp ports (no-response)
+  PORT    STATE SERVICE
+  80/tcp  open  http
+  443/tcp open  https
+  ```
+
 ## Requirements
 - Linux operating system
 - Root or sudo privileges
