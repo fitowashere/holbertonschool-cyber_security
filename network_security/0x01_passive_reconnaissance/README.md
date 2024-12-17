@@ -158,6 +158,48 @@ holbertonschool.com     text = "v=spf1 include:mailgun.org include:_spf.google.c
 nslookup -query=TXT $1
 ```
 
+## 4-dig_all.sh
+
+A bash script that retrieves all DNS records of a specified domain using the dig command.
+
+### Features
+
+- Retrieves all DNS record types (A, MX, NS, SOA, TXT, etc.)
+- Shows only answer section (+noall +answer)
+- Displays TTL values and record classes
+
+### Usage
+
+```bash
+./4-dig_all.sh domain_name
+```
+
+Example:
+```bash
+./4-dig_all.sh holbertonschool.com
+```
+
+### Sample Output
+
+```
+holbertonschool.com.    300     IN      A       99.83.190.102
+holbertonschool.com.    300     IN      A       75.2.70.75
+holbertonschool.com.    300     IN      NS      ns-1455.awsdns-53.org.
+holbertonschool.com.    300     IN      NS      ns-1619.awsdns-10.co.uk.
+[...]
+```
+
+### Code Explanation
+
+```bash
+#!/bin/bash
+dig +noall +answer $1
+```
+
+- `+noall`: Disables all display flags
+- `+answer`: Shows only the answer section
+- `$1`: Domain name argument
+
 ### Requirements
 
 - Linux/Unix environment
