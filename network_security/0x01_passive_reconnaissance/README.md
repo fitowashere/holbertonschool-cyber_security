@@ -1,6 +1,6 @@
 # Passive Reconnaissance Tools
 
-This repository contains tools for passive reconnaissance, focusing on WHOIS information gathering and formatting.
+This repository contains tools for passive reconnaissance, focusing on WHOIS information gathering and DNS record lookups.
 
 ## 0-whois.sh
 
@@ -24,27 +24,101 @@ Example:
 ./0-whois.sh holbertonschool.com
 ```
 
-### Output Format
+### Code Explanation
 
-The script creates a CSV file with the following information:
-- Registrant Information (Name, Organization, Address, etc.)
-- Admin Information (Name, Organization, Address, etc.)
-- Tech Information (Name, Organization, Address, etc.)
+```bash
+#!/bin/bash
+whois $1 | awk -F': ' '/^Registrant |^Admin |^Tech / {print $1 "," $2}' > "$1.csv"
+```
+
+## 1-a_record.sh
+
+A bash script that retrieves the A records of a specified domain using the nslookup command.
+
+### Features
+
+- Retrieves A records for any domain
+- Uses nslookup's default DNS server
+- Shows both authoritative and non-authoritative answers
+
+### Usage
+
+```bash
+./1-a_record.sh domain_name
+```
+
+Example:
+```bash
+./1-a_record.sh holbertonschool.com
+```
 
 ### Sample Output
 
-```csv
-Registrant Name,Holberton Inc
-Registrant Organization,Holberton Inc
-Registrant Street,5670 Wilshire Blvd suite 1802
-...
-Tech Email,2c420b43d982c37b7621f2015f3e107b-37876677@contact.gandi.net
+```
+Server:         8.8.8.8
+Address:        8.8.8.8#53
+
+Non-authoritative answer:
+Name:   holbertonschool.com
+Address: 75.2.70.75
+Name:   holbertonschool.com
+Address: 99.83.190.102
+```
+
+### Code Explanation
+
+```bash
+#!/bin/bash
+nslookup -query=A $1
+```
+
+## 2-mx_record.sh
+
+A bash script that retrieves the MX records of a specified domain using the nslookup command.
+
+### Features
+
+- Retrieves MX (Mail Exchanger) records for any domain
+- Shows mail server priorities
+- Uses nslookup's default DNS server
+
+### Usage
+
+```bash
+./2-mx_record.sh domain_name
+```
+
+Example:
+```bash
+./2-mx_record.sh holbertonschool.com
+```
+
+### Sample Output
+
+```
+Server:         8.8.8.8
+Address:        8.8.8.8#53
+
+Non-authoritative answer:
+holbertonschool.com     mail exchanger = 1 aspmx.l.google.com.
+holbertonschool.com     mail exchanger = 10 alt3.aspmx.l.google.com.
+holbertonschool.com     mail exchanger = 10 alt4.aspmx.l.google.com.
+holbertonschool.com     mail exchanger = 5 alt1.aspmx.l.google.com.
+holbertonschool.com     mail exchanger = 5 alt2.aspmx.l.google.com.
+```
+
+### Code Explanation
+
+```bash
+#!/bin/bash
+nslookup -query=MX $1
 ```
 
 ### Requirements
 
 - Linux/Unix environment
 - whois command installed
+- nslookup command installed
 - awk (GNU version)
 
 ### Installation
@@ -54,20 +128,7 @@ Tech Email,2c420b43d982c37b7621f2015f3e107b-37876677@contact.gandi.net
 git clone [repository-url]
 ```
 
-2. Make the script executable:
+2. Make the scripts executable:
 ```bash
-chmod +x 0-whois.sh
+chmod +x *.sh*
 ```
-
-### Code Explanation
-
-```bash
-#!/bin/bash
-whois $1 | awk -F': ' '/^Registrant |^Admin |^Tech / {print $1 "," $2}' > "$1.csv"
-```
-
-- Uses whois command to get domain information
-- Processes output with awk using ': ' as field separator
-- Matches lines starting with Registrant, Admin, or Tech
-- Creates CSV format with field name and value
-- Saves output to [domain].csv file
