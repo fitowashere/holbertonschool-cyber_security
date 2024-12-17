@@ -200,6 +200,64 @@ dig +noall +answer $1
 - `+answer`: Shows only the answer section
 - `$1`: Domain name argument
 
+## 5-subfinder.sh
+
+A bash script that discovers subdomains using the subfinder tool and resolves their IP addresses.
+
+### Features
+
+- Discovers subdomains using passive reconnaissance
+- Shows subdomain list in standard output
+- Creates a file with Host,IP format
+- Filters out entries without valid IP addresses
+
+### Usage
+
+```bash
+./5-subfinder.sh domain_name
+```
+
+Example:
+```bash
+./5-subfinder.sh holbertonschool.com
+```
+
+### Sample Output
+
+Standard output shows discovered subdomains:
+```
+www.holbertonschool.com
+blog.holbertonschool.com
+support.holbertonschool.com
+...
+```
+
+Generated file (domain.txt) contains Host,IP pairs:
+```
+www.holbertonschool.com,63.35.51.142
+blog.holbertonschool.com,192.0.78.131
+support.holbertonschool.com,104.16.53.111
+...
+```
+
+### Code Explanation
+
+```bash
+#!/bin/bash
+subfinder -silent -d $1 -o $1.txt -nW -oI
+```
+
+- First line outputs subdomains to screen
+- Second part resolves IPs and creates CSV format
+- Only includes entries with valid IP addresses
+- Saves results to domain.txt file
+
+### Requirements
+
+- subfinder tool installed
+- dig command available
+- Bash shell
+
 ### Requirements
 
 - Linux/Unix environment
