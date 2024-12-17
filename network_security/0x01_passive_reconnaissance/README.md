@@ -252,18 +252,66 @@ subfinder -silent -d $1 -o $1.txt -nW -oI
 - Only includes entries with valid IP addresses
 - Saves results to domain.txt file
 
+## 6. Shodan Domain Analysis
+
+A comprehensive guide to gathering domain information using Shodan and documenting findings.
+
+### Features
+
+- Collects IP ranges associated with the domain
+- Identifies technologies and frameworks
+- Documents findings in structured markdown format
+
+### Usage
+
+1. Visit Shodan.io and use these search queries:
+```
+hostname:holbertonschool.com
+hostname:.holbertonschool.com
+```
+
+2. Collect information:
+   - IP addresses and ranges
+   - Web technologies
+   - Cloud services
+   - Security measures
+   - Frameworks and languages
+
+3. Document findings in markdown format:
+```markdown
+# Domain Analysis Report
+
+## IP Ranges
+[List discovered IPs]
+
+## Technologies & Frameworks
+[List found technologies]
+
+## Additional Findings
+[Document other discoveries]
+```
+
+### Output Format
+
+Create `holbertonschool_report.md` with sections for:
+- IP ranges/addresses
+- Technologies and frameworks
+- Infrastructure details
+- Security observations
+- Additional findings
+
 ### Requirements
 
 - subfinder tool installed
 - dig command available
 - Bash shell
-
-### Requirements
-
 - Linux/Unix environment
 - whois command installed
 - nslookup command installed
 - awk (GNU version)
+- Shodan account/access
+- Markdown editor
+- Documentation skills
 
 ### Installation
 
