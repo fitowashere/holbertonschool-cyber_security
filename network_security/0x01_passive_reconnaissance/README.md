@@ -114,6 +114,50 @@ holbertonschool.com     mail exchanger = 5 alt2.aspmx.l.google.com.
 nslookup -query=MX $1
 ```
 
+## 3-txt_record.sh
+
+A bash script that retrieves the TXT records of a specified domain using the nslookup command.
+
+### Features
+
+- Retrieves TXT records for any domain
+- Shows domain verification records, SPF records, and other text-based DNS records
+- Automatically handles TCP mode for truncated responses
+
+### Usage
+
+```bash
+./3-txt_record.sh domain_name
+```
+
+Example:
+```bash
+./3-txt_record.sh holbertonschool.com
+```
+
+### Sample Output
+
+```
+;; Truncated, retrying in TCP mode.
+Server:         8.8.8.8
+Address:        8.8.8.8#53
+
+Non-authoritative answer:
+holbertonschool.com     text = "1C8BC5F558"
+holbertonschool.com     text = "MS=BB8A869E4E8A47D208F560DE7D83F199D1BB8F4F"
+holbertonschool.com     text = "apple-domain-verification=sqTGlUgV9vVTnBuB"
+holbertonschool.com     text = "dropbox-domain-verification=pvxn88z3e06i"
+holbertonschool.com     text = "google-site-verification=lnffgexG_GGal6Fa53z0Ve4dJY4z4GXAmy1I2_ldotk"
+holbertonschool.com     text = "v=spf1 include:mailgun.org include:_spf.google.com ~all"
+```
+
+### Code Explanation
+
+```bash
+#!/bin/bash
+nslookup -query=TXT $1
+```
+
 ### Requirements
 
 - Linux/Unix environment
