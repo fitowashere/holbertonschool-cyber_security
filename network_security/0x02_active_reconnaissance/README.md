@@ -18,6 +18,7 @@ holbertonschool-cyber_security/
         ├── README.md
         ├── 0-ports.txt
         ├── 1-webserver.txt
+        ├── 2-injectable.txt
         └── 100-flag.txt
 ```
 
@@ -101,13 +102,50 @@ FLAG_VALUE
 ```
 Save the output to `100-flag.txt` without any extra spaces, quotes, or newlines.
 
+## Task 3: Injectable Path Discovery
+### Objective
+Identify potentially vulnerable pages that accept parameters or form submissions.
+
+### Requirements
+- Target Machine: `cyber_netsec_0x02`
+- Endpoint: `http://active.hbtn`
+- Output Format: Path to vulnerable page in `2-injectable.txt`
+
+### Steps
+1. Browse through the website
+2. Look for pages with:
+   - URL parameters (e.g., `/page?id=1`)
+   - Form submissions
+   - Dynamic content
+3. Save only the base pathname
+
+### Common Vulnerable Paths
+- `/search`
+- `/profile`
+- `/user`
+- `/product`
+- `/admin`
+- `/api`
+
+### Example
+If vulnerable page is `http://active.hbtn/orders?id=1511515`, save as:
+```bash
+echo "/orders" > 2-injectable.txt
+```
+
+### Format Rules
+- Include leading slash
+- Don't include domain name
+- Don't include parameters
+- Don't include trailing slashes
+
 ## Tips
 - Always ensure you have proper authorization before scanning
 - Use appropriate nmap flags based on your needs
 - Document all findings accurately
 - Follow the exact output format specified
 - Make sure Wappalyzer is properly installed and enabled in your browser
-- When saving flags, ensure there are no extra spaces or characters
+- When saving flags or paths, ensure there are no extra spaces or characters
 
 ## License
 This project is part of the Holberton School curriculum.
