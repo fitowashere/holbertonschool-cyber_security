@@ -10,6 +10,7 @@ This project focuses on the fundamental principles of network security and activ
 - Nmap installed on your system
 - Wappalyzer browser extension
 - SQLmap installed on your system
+- Gobuster installed on your system
 
 ## Project Structure
 ```
@@ -21,7 +22,11 @@ holbertonschool-cyber_security/
         ├── 1-webserver.txt
         ├── 2-injectable.txt
         ├── 3-database.txt
-        └── 4-tables.txt
+        ├── 4-tables.txt
+        ├── 5-hidden_dir.txt
+        ├── 100-flag.txt
+        ├── 101-flag.txt
+        └── 102-flag.txt
 ```
 
 ## Task 0: Port Discovery
@@ -198,6 +203,102 @@ number
 - Make sure to use the injectable endpoint found in Task 3
 - Both output files should contain only the requested information without extra spaces or characters
 - Do not include quotes or other formatting in the output files
+
+## Task 5: Directory Enumeration
+### Objective
+Find the hidden admin panel login page using directory enumeration techniques.
+
+### Requirements
+- Target Machine: `cyber_netsec_0x02`
+- Endpoint: `http://active.hbtn`
+- Tool: gobuster
+- Output Format: Admin panel path in `5-hidden_dir.txt`
+
+### Steps
+1. Run gobuster with specified options:
+```bash
+gobuster dir \
+  -u http://active.hbtn \
+  -w /usr/share/wordlists/dirbuster/directory-list-2.3-small.txt \
+  -b 302
+```
+
+2. Identify admin panel path from results
+
+3. Save the found path:
+```bash
+echo "/admin_path" > 5-hidden_dir.txt
+```
+
+### Command Options
+- `dir`: Directory enumeration mode
+- `-u`: Target URL
+- `-w`: Wordlist path
+- `-b 302`: Ignore 302 status codes
+
+### Output Format Rules
+- Include leading slash
+- Don't include domain name
+- Don't include trailing slashes
+- Don't include parameters
+
+### Example
+If admin panel is at `http://active.hbtn/admin_panel`, save as:
+```bash
+echo "/admin_panel" > 5-hidden_dir.txt
+```
+
+### Tips
+- Watch for common admin paths:
+  - /admin
+  - /administrator
+  - /adminpanel
+  - /backend
+  - /control
+  - /cp
+  - /manage
+
+## Task 6: Admin Panel Flag Discovery
+### Objective
+Find the third flag hidden in the admin panel.
+
+### Requirements
+- Target Machine: `cyber_netsec_0x02`
+- Endpoint: `http://active.hbtn`
+- Location: Admin panel (found in Task 6)
+- Output Format: Flag value in `102-flag.txt`
+
+### Steps
+1. Navigate to the admin panel URL found in Task 6
+2. Check these locations:
+   - Page source code
+   - HTML comments
+   - Response headers
+   - Form fields
+   - Hidden inputs
+   - Error messages
+   - JavaScript files
+
+3. Save the flag when found:
+```bash
+echo "FLAG_VALUE" > 102-flag.txt
+```
+
+### Areas to Check
+- Page source (Ctrl+U)
+- Developer Tools:
+  - Network tab
+  - Console tab
+  - Elements tab
+  - Application tab
+- Response headers
+- Login error messages
+- Hidden form fields
+
+### Note
+- The flag is "exposed clearly" in the admin panel
+- Look for obvious flags before trying complex exploitation
+- Make sure to check both client-side and server-side responses
 
 ## Tips
 - Always ensure you have proper authorization before scanning
