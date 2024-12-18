@@ -130,7 +130,7 @@ Identify potentially vulnerable pages that accept parameters or form submissions
 ### Example
 If vulnerable page is `http://active.hbtn/orders?id=1511515`, save as:
 ```bash
-echo "/orders" > 2-injectable.txt
+echo "/product" > 2-injectable.txt
 ```
 
 ### Format Rules
