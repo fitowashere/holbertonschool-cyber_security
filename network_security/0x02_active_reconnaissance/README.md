@@ -9,6 +9,7 @@ This project focuses on the fundamental principles of network security and activ
 - VPN access
 - Nmap installed on your system
 - Wappalyzer browser extension
+- SQLmap installed on your system
 
 ## Project Structure
 ```
@@ -19,7 +20,8 @@ holbertonschool-cyber_security/
         ├── 0-ports.txt
         ├── 1-webserver.txt
         ├── 2-injectable.txt
-        └── 100-flag.txt
+        ├── 3-database.txt
+        └── 4-tables.txt
 ```
 
 ## Task 0: Port Discovery
@@ -130,7 +132,7 @@ Identify potentially vulnerable pages that accept parameters or form submissions
 ### Example
 If vulnerable page is `http://active.hbtn/orders?id=1511515`, save as:
 ```bash
-echo "/product" > 2-injectable.txt
+echo "/orders" > 2-injectable.txt
 ```
 
 ### Format Rules
@@ -139,6 +141,64 @@ echo "/product" > 2-injectable.txt
 - Don't include parameters
 - Don't include trailing slashes
 
+## Task 4: SQL Injection Enumeration
+### Objective
+Use SQLmap to discover the database name and count the number of tables it contains.
+
+### Requirements
+- Target Machine: `cyber_netsec_0x02`
+- Endpoint: `http://active.hbtn`
+- Tool: SQLmap
+- Output Files: 
+  - Database name in `3-database.txt`
+  - Table count in `4-tables.txt`
+
+### Steps
+1. Use SQLmap to find database name:
+```bash
+sqlmap -u "http://active.hbtn/products" --dbs --random-agent --batch
+```
+
+2. Once database is found, enumerate tables:
+```bash
+sqlmap -u "http://active.hbtn/products" -D <database_name> --tables --random-agent --batch
+```
+
+3. Save the findings:
+```bash
+# Save database name
+echo "<database_name>" > 3-database.txt
+
+# Save number of tables
+echo "<number_of_tables>" > 4-tables.txt
+```
+
+### Useful SQLmap Options
+- `--dbs`: List available databases
+- `-D`: Specify target database
+- `--tables`: Enumerate tables
+- `--batch`: Never ask for user input
+- `--random-agent`: Use random User-Agent
+- `--level=5 --risk=3`: More thorough testing
+- `--tamper=space2comment`: Bypass WAF
+- `--forms`: Test form parameters for injection
+
+### Output Format
+For database name:
+```
+database_name
+```
+
+For table count:
+```
+number
+```
+
+### Note
+- Make sure to use the injectable endpoint found in Task 3
+- Both output files should contain only the requested information without extra spaces or characters
+- Do not include quotes or other formatting in the output files
+
 ## Tips
 - Always ensure you have proper authorization before scanning
 - Use appropriate nmap flags based on your needs
@@ -146,6 +206,8 @@ echo "/product" > 2-injectable.txt
 - Follow the exact output format specified
 - Make sure Wappalyzer is properly installed and enabled in your browser
 - When saving flags or paths, ensure there are no extra spaces or characters
+- Be mindful of web application security testing best practices
+- Verify all findings before submitting
 
 ## License
 This project is part of the Holberton School curriculum.
