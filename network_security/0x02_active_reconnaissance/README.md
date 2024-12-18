@@ -17,7 +17,8 @@ holbertonschool-cyber_security/
     └── 0x02_active_reconnaissance/
         ├── README.md
         ├── 0-ports.txt
-        └── 1-webserver.txt
+        ├── 1-webserver.txt
+        └── 100-flag.txt
 ```
 
 ## Task 0: Port Discovery
@@ -71,12 +72,42 @@ sudo bash -c 'echo "<target_ip>    active.hbtn" >> /etc/hosts'
 ```
 Save the output to `1-webserver.txt`
 
+## Task 2: Source Code Inspection
+### Objective
+Find the first flag hidden in the website's source code.
+
+### Requirements
+- Target Machine: `cyber_netsec_0x02`
+- Endpoint: `http://active.hbtn`
+- Output Format: Flag value in `100-flag.txt`
+
+### Steps
+1. Visit the target website in your browser
+2. View the page source (Ctrl+U or right-click -> View Page Source)
+3. Search for comments and hidden content
+4. Save the found flag in the required format
+
+### Areas to Check
+- HTML comments (`<!-- -->`)
+- Hidden input fields
+- Meta tags
+- Commented-out code sections
+- Bottom of the page
+- JavaScript code blocks
+
+### Expected Output Format
+```
+FLAG_VALUE
+```
+Save the output to `100-flag.txt` without any extra spaces, quotes, or newlines.
+
 ## Tips
 - Always ensure you have proper authorization before scanning
 - Use appropriate nmap flags based on your needs
 - Document all findings accurately
 - Follow the exact output format specified
 - Make sure Wappalyzer is properly installed and enabled in your browser
+- When saving flags, ensure there are no extra spaces or characters
 
 ## License
 This project is part of the Holberton School curriculum.
