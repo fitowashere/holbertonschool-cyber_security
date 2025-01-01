@@ -28,6 +28,16 @@ The ICMP Echo scanning script uses these flags:
 - `-PE`: Enables ICMP Echo scanning mode
 - `$1`: Represents the subnet argument provided when running the script
 
+### 3. ICMP Address Mask Scanning (3-icmp_address_mask_scan.sh)
+```bash
+#!/bin/bash
+sudo nmap -sn -PM $1
+```
+The ICMP Address Mask scanning script uses these flags:
+- `-sn`: Disables port scanning, focusing only on host discovery
+- `-PM`: Enables ICMP Address Mask scanning mode
+- `$1`: Represents the subnet argument provided when running the script
+
 ## Understanding the Scanning Methods
 
 ### ARP Scanning
@@ -64,6 +74,20 @@ Host is up (0.14s latency).
 Nmap done: 256 IP addresses (1 host up) scanned in 19.03 seconds
 ```
 
+### ICMP Address Mask Scanning
+ICMP Address Mask scanning operates at Layer 3 (Network Layer) of the OSI model, but uses a different type of ICMP message compared to Echo scanning. This method:
+- Uses ICMP Address Mask Request packets (Type 17) instead of Echo requests
+- Expects ICMP Address Mask Reply packets (Type 18) from live hosts
+- Is less commonly used than Echo scanning, which can make it useful for evading some security measures
+- May receive fewer responses than Echo scanning as many systems are not configured to respond to Address Mask requests
+- Can work across network segments like Echo scanning
+
+Example output:
+```
+Starting Nmap 7.93 ( https://nmap.org ) at 2023-05-10 15:15 CDT
+Nmap done: 254 IP address (0 hosts up) scanned in 53.01 seconds
+```
+
 ## Usage
 
 For either script:
@@ -90,6 +114,12 @@ For either script:
   - You need to discover hosts beyond your local subnet
   - You want a more universally compatible method
   - MAC address information isn't necessary
+
+- Use ICMP Address Mask scanning when:
+  - You want to try an alternative to Echo scanning
+  - Standard ICMP Echo requests are being blocked
+  - You're testing how systems respond to different types of ICMP messages
+  - You need to perform host discovery across network segments
 
 ## Prerequisites
 
