@@ -6,7 +6,7 @@ This project contains bash scripts that demonstrate different techniques for dis
 
 ## Script Overview
 
-### 1. ARP Scanning (0-arp_scan.sh)
+### 0. ARP Scanning (0-arp_scan.sh)
 ```bash
 #!/bin/bash
 sudo nmap -sn -PR $1
@@ -17,7 +17,7 @@ The ARP scanning script uses these flags:
 - `-PR`: Specifies ARP scan mode, sending ARP requests to discover hosts
 - `$1`: Represents the subnet argument provided when running the script
 
-### 2. ICMP Echo Scanning (1-icmp_echo_scan.sh)
+### 1. ICMP Echo Scanning (1-icmp_echo_scan.sh)
 ```bash
 #!/bin/bash
 sudo nmap -sn -PE $1
@@ -27,6 +27,17 @@ The ICMP Echo scanning script uses these flags:
 - `-sn`: Disables port scanning, focusing only on host discovery
 - `-PE`: Enables ICMP Echo scanning mode
 - `$1`: Represents the subnet argument provided when running the script
+
+### 2. ICMP Timestamp Scanning (2-icmp_timestamp_scan.sh)
+```bash
+#!/bin/bash
+sudo nmap -sn -PP $1
+```
+
+The nmap command uses important flags:
+- `-sn`: This disables port scanning, telling nmap to focus solely on host discovery
+- `-PP`: This enables ICMP Timestamp scanning, which sends ICMP Timestamp Request packets (Type 13) and listens for ICMP Timestamp Reply packets (Type 14)
+- `$1`: This takes the subnet argument you provide when running the script
 
 ### 3. ICMP Address Mask Scanning (3-icmp_address_mask_scan.sh)
 ```bash
@@ -74,6 +85,24 @@ Host is up (0.14s latency).
 Nmap done: 256 IP addresses (1 host up) scanned in 19.03 seconds
 ```
 
+### ICMP Timestamp Scanning
+ICMP Timestamp scanning is another Layer 3 (Network Layer) discovery method that uses a different type of ICMP message. Instead of the standard Echo requests, it sends ICMP Timestamp requests to potential hosts. This method:
+- Uses ICMP Timestamp Request packets (Type 13)
+- Expects ICMP Timestamp Reply packets (Type 14) from live hosts
+- Can be particularly useful when Echo requests are being filtered
+- Works across network segments like other ICMP methods
+- Often receives different responses than Echo requests due to varying firewall rules
+
+The key advantage of Timestamp scanning is that some firewalls and security devices may be configured to block ICMP Echo requests while allowing Timestamp requests to pass through. This makes it a valuable alternative when standard ping-style scanning is restricted.
+
+Example output:
+```
+Starting Nmap 7.93 ( https://nmap.org ) at 2023-05-21 14:17 CDT
+Nmap scan report for 6.19.100.2
+Host is up (0.16s latency).
+Nmap done: 256 IP addresses (1 host up) scanned in 19.93 seconds
+```
+
 ### ICMP Address Mask Scanning
 ICMP Address Mask scanning operates at Layer 3 (Network Layer) of the OSI model, but uses a different type of ICMP message compared to Echo scanning. This method:
 - Uses ICMP Address Mask Request packets (Type 17) instead of Echo requests
@@ -87,6 +116,7 @@ Example output:
 Starting Nmap 7.93 ( https://nmap.org ) at 2023-05-10 15:15 CDT
 Nmap done: 254 IP address (0 hosts up) scanned in 53.01 seconds
 ```
+
 
 ## Usage
 
@@ -114,6 +144,13 @@ For either script:
   - You need to discover hosts beyond your local subnet
   - You want a more universally compatible method
   - MAC address information isn't necessary
+
+- Use ICMP Timestamp scanning when:
+  - Standard ICMP Echo requests are being blocked
+  - You want to try an alternative to Echo scanning
+  - You need to bypass certain firewall configurations
+  - You're performing network reconnaissance where traditional ping sweeps might be detected
+  - You need to discover hosts across different network segments
 
 - Use ICMP Address Mask scanning when:
   - You want to try an alternative to Echo scanning
