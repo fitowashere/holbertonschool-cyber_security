@@ -1,6 +1,6 @@
 # Host Discovery with Nmap
 
-This project demonstrates various network host discovery techniques using Nmap. We explore six distinct scanning methods operating across different layers of the OSI model: ARP scanning at Layer 2, ICMP-based scans at Layer 3, and TCP-based scans at Layer 4. Each method provides unique advantages and is suited for different network scenarios.
+This project explores network host discovery using various Nmap scanning techniques. We implement different methods operating across multiple layers of the OSI model: ARP at Layer 2, ICMP at Layer 3, and TCP/UDP at Layer 4. Each technique offers unique advantages and suits different network scenarios. Additionally, the project includes a practical CTF challenge focusing on UDP service enumeration.
 
 ## Script Overview
 
@@ -10,7 +10,7 @@ This project demonstrates various network host discovery techniques using Nmap. 
 sudo nmap -sn -PR $1
 ```
 
-ARP scanning operates at the Data Link Layer, sending ARP requests to discover local network hosts. The command flags serve these purposes:
+ARP scanning works at the Data Link Layer (Layer 2), sending ARP requests to discover hosts on a local network. The command flags serve specific purposes:
 - `-sn`: Disables port scanning, focusing purely on host discovery 
 - `-PR`: Activates ARP scan mode for sending ARP requests
 - `$1`: Represents the subnet argument provided by the user
@@ -21,7 +21,7 @@ ARP scanning operates at the Data Link Layer, sending ARP requests to discover l
 sudo nmap -sn -PE $1
 ```
 
-ICMP Echo scanning employs the traditional ping mechanism at the Network Layer. The script uses these flags:
+ICMP Echo scanning employs the traditional ping mechanism at the Network Layer (Layer 3). The script uses these flags:
 - `-sn`: Performs host discovery without port scanning
 - `-PE`: Enables ICMP Echo scanning mode
 - `$1`: Takes the subnet argument for scanning
@@ -32,7 +32,7 @@ ICMP Echo scanning employs the traditional ping mechanism at the Network Layer. 
 sudo nmap -sn -PP $1
 ```
 
-ICMP Timestamp scanning utilizes timestamp requests at the Network Layer. The script includes:
+Operating at Layer 3, ICMP Timestamp scanning provides an alternative to Echo requests by using timestamp messages. The script includes:
 - `-sn`: Restricts scanning to host discovery
 - `-PP`: Activates ICMP Timestamp scanning
 - `$1`: Accepts the target subnet as an argument
@@ -43,7 +43,7 @@ ICMP Timestamp scanning utilizes timestamp requests at the Network Layer. The sc
 sudo nmap -sn -PM $1
 ```
 
-ICMP Address Mask scanning uses mask requests at the Network Layer. The script employs:
+Another Layer 3 technique, ICMP Address Mask scanning uses mask requests to discover hosts. The script employs:
 - `-sn`: Limits the scan to host discovery
 - `-PM`: Enables ICMP Address Mask scanning
 - `$1`: Receives the subnet parameter
@@ -54,9 +54,9 @@ ICMP Address Mask scanning uses mask requests at the Network Layer. The script e
 sudo nmap -sn -PS22,80,443 $1
 ```
 
-TCP SYN Ping scanning operates at the Transport Layer, sending SYN packets to common ports. The flags indicate:
+Moving to Layer 4, TCP SYN Ping scanning sends SYN packets to common service ports. The flags indicate:
 - `-sn`: Disables port scanning for focused host discovery
-- `-PS22,80,443`: Performs TCP SYN Ping scanning on ports 22, 80, and 443
+- `-PS22,80,443`: Performs TCP SYN Ping scanning on ports 22 (SSH), 80 (HTTP), and 443 (HTTPS)
 - `$1`: Takes the subnet argument
 
 ### 6. TCP ACK Ping Scanning (5-tcp_ack_ping.sh)
@@ -65,19 +65,42 @@ TCP SYN Ping scanning operates at the Transport Layer, sending SYN packets to co
 sudo nmap -sn -PA22,80,443 $1
 ```
 
-TCP ACK Ping scanning uses ACK packets at the Transport Layer. The command uses:
+Another Layer 4 approach, TCP ACK Ping scanning sends ACK packets to detect hosts. The command uses:
 - `-sn`: Ensures scan focuses on host discovery
 - `-PA22,80,443`: Activates TCP ACK Ping scanning on specified ports
 - `$1`: Represents the target subnet
 
+### 7. UDP Ping Scanning (6-udp_ping_scan.sh)
+```bash
+#!/bin/bash
+sudo nmap -sn -PU53,161,162 $1
+```
+
+UDP Ping scanning offers a connectionless approach at Layer 4. The command flags indicate:
+- `-sn`: Restricts to host discovery
+- `-PU53,161,162`: Activates UDP Ping scanning on common UDP service ports
+- `$1`: Takes the subnet argument
+
+### 8. CTF Challenge: UDP Service Version Detection
+This practical challenge requires identifying a flag hidden in UDP service version information:
+```bash
+sudo nmap -sUV -p200-300 cybernetsec0x04
+```
+
+The scan combines several important elements:
+- `-sU`: Enables UDP scanning
+- `-V`: Activates version detection
+- `-p200-300`: Specifies the port range
+- Target specific host: cybernetsec0x04
+
 ## Understanding the Scanning Methods
 
 ### ARP Scanning
-Operating at Layer 2, ARP scanning works by sending ARP requests within a local network segment. This method excels in local network discovery by:
-- Providing rapid host detection within the same subnet
-- Revealing MAC addresses of responding hosts
-- Generating minimal network overhead
-- Offering the highest accuracy for local network mapping
+Operating at Layer 2, ARP scanning excels in local network discovery:
+- Fastest method for local network scanning
+- Reveals MAC addresses of responding hosts
+- Minimal network overhead
+- Limited to local subnet operation
 
 Example output:
 ```
@@ -91,11 +114,11 @@ Nmap done: 256 IP addresses (2 hosts up) scanned in 2.03 seconds
 ```
 
 ### ICMP Echo Scanning
-Working at Layer 3, ICMP Echo scanning sends traditional ping requests across network boundaries. This method provides:
-- Cross-subnet scanning capabilities
-- Wide compatibility with most network devices
-- Simple yet effective host discovery
-- Similar functionality to standard ping but with greater efficiency
+This Layer 3 method uses traditional ping requests:
+- Works across network boundaries
+- Widely supported by network devices
+- May be blocked by firewalls
+- Provides reliable host discovery when allowed
 
 Example output:
 ```
@@ -106,11 +129,11 @@ Nmap done: 256 IP addresses (1 host up) scanned in 19.03 seconds
 ```
 
 ### ICMP Timestamp Scanning
-Also at Layer 3, this method sends timestamp requests which may bypass certain firewall rules. Benefits include:
-- Alternative path when Echo requests are blocked
-- Potential detection of hosts that filter standard pings
-- Additional network mapping capabilities through timing information
-- Generally good response rates from active hosts
+Also at Layer 3, this method uses timestamp requests:
+- Alternative when Echo requests are blocked
+- May bypass certain firewall rules
+- Provides timing information
+- Generally good response rates
 
 Example output:
 ```
@@ -121,11 +144,11 @@ Nmap done: 256 IP addresses (1 host up) scanned in 19.93 seconds
 ```
 
 ### ICMP Address Mask Scanning
-This Layer 3 method uses mask requests to discover hosts and potentially gather subnet information. Key characteristics include:
-- Less common ICMP message type that might bypass filters
-- Potential to reveal network configuration details
-- Often receives fewer responses than other ICMP methods
-- Useful in specific network environments
+This Layer 3 technique uses mask requests:
+- Less common ICMP message type
+- May reveal network configuration
+- Often receives fewer responses
+- Useful in specific environments
 
 Example output:
 ```
@@ -134,11 +157,11 @@ Nmap done: 254 IP address (0 hosts up) scanned in 53.01 seconds
 ```
 
 ### TCP SYN Ping Scanning
-Operating at Layer 4, this method sends SYN packets to commonly used ports. The technique offers:
-- Effectiveness when ICMP is blocked
-- Higher success rates with servers running common services
-- Additional insight into potential service availability
-- Good balance between stealth and effectiveness
+At Layer 4, this method sends SYN packets:
+- Effective when ICMP is blocked
+- Works well with common services
+- Provides service availability hints
+- Balanced stealth and effectiveness
 
 Example output:
 ```
@@ -149,11 +172,11 @@ Nmap done: 256 IP addresses (1 host up) scanned in 22.42 seconds
 ```
 
 ### TCP ACK Ping Scanning
-This Layer 4 technique uses ACK packets to detect hosts, offering several advantages:
-- Enhanced stealth compared to SYN ping
-- Better success at bypassing stateless firewalls
-- Reliable operation across various operating systems
-- Effectiveness when other scanning methods fail
+Another Layer 4 technique using ACK packets:
+- More stealthy than SYN ping
+- Bypasses stateless firewalls
+- Works across various OS types
+- Effective when other methods fail
 
 Example output:
 ```
@@ -161,27 +184,58 @@ Starting Nmap 7.93 ( https://nmap.org ) at 2023-05-10 15:15 CDT
 Nmap done: 256 IP addresses (0 hosts up) scanned in 154.50 seconds
 ```
 
+### UDP Ping Scanning
+The connectionless Layer 4 approach:
+- Useful when TCP scanning is blocked
+- Targets common UDP services
+- Relies on ICMP error messages
+- Complementary to TCP methods
+
+Example output:
+```
+Starting Nmap 7.93 ( https://nmap.org ) at 2023-05-21 15:10 CDT
+Nmap scan report for 6.19.100.2
+Host is up (0.13s latency).
+Nmap done: 256 IP addresses (1 host up) scanned in 23.39 seconds
+```
+
+## UDP Service Version Detection for CTF
+This specialized technique combines discovery with service enumeration:
+- Performs detailed version detection
+- Uses protocol-specific probes
+- Requires patience due to UDP nature
+- May reveal hidden information in service details
+
 ## Usage
 
-For any of these scripts:
+For any script:
 
-1. Make the script executable:
-   ```bash
-   chmod +x script_name.sh
-   ```
+1. Make it executable:
+```bash
+chmod +x script_name.sh
+```
 
-2. Run with a subnet argument:
-   ```bash
-   ./script_name.sh 192.168.1.0/24
-   ```
+2. Run with target subnet:
+```bash
+./script_name.sh 192.168.1.0/24
+```
 
 ## Prerequisites
 
-- Linux-based operating system
-- Nmap installed on your system
-- Root privileges or sudo access
-- Basic understanding of networking concepts and protocols
-- Permission to perform network scanning on the target network
+1. System Requirements:
+   - Linux-based operating system
+   - Nmap installed
+   - Root/sudo privileges
+
+2. Network Requirements:
+   - Permission to scan target network
+   - Appropriate network access
+   - Understanding of network security implications
+
+3. Knowledge Requirements:
+   - Basic networking concepts
+   - Understanding of different protocols
+   - Familiarity with command-line operations
 
 ## Repository Structure
 
@@ -194,6 +248,27 @@ For any of these scripts:
   - `3-icmp_address_mask_scan.sh`: ICMP Address Mask scanning script
   - `4-tcp_syn_ping.sh`: TCP SYN Ping scanning script
   - `5-tcp_ack_ping.sh`: TCP ACK Ping scanning script
+  - `6-udp_ping_scan.sh`: UDP Ping scanning script
+  - `100-flag.txt`: CTF challenge flag
   - `README.md`: Documentation file
 
-Note: These scripts are intended for educational purposes and should only be used on networks where you have explicit permission to perform scanning activities.
+## CTF Challenge Tips
+
+For successful flag capture:
+
+1. Preparation:
+   - Ensure root/sudo access
+   - Verify network connectivity
+   - Review UDP scanning concepts
+
+2. Scanning Strategy:
+   - Focus on ports 200-300
+   - Be patient with UDP scanning
+   - Watch for unusual version strings
+
+3. Analysis:
+   - Examine all service information carefully
+   - Look for non-standard responses
+   - Consider using additional Nmap scripts if needed
+
+Note: These scripts and techniques are intended for educational purposes and should only be used on networks where you have explicit permission to perform scanning activities. The CTF challenge is designed to teach practical UDP service enumeration skills in a controlled environment.
