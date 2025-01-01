@@ -1,6 +1,6 @@
 # Host Discovery with Nmap
 
-This project demonstrates various network host discovery techniques using Nmap. We explore four distinct scanning methods: ARP scanning, ICMP Echo scanning, ICMP Timestamp scanning, and ICMP Address Mask scanning. Each approach leverages different network protocols and operates at different OSI model layers, providing unique advantages for specific scenarios.
+This project demonstrates various network host discovery techniques using Nmap. We explore six distinct scanning methods operating across different layers of the OSI model: ARP scanning at Layer 2, ICMP-based scans at Layer 3, and TCP-based scans at Layer 4. Each method provides unique advantages and is suited for different network scenarios.
 
 ## Script Overview
 
@@ -10,8 +10,8 @@ This project demonstrates various network host discovery techniques using Nmap. 
 sudo nmap -sn -PR $1
 ```
 
-ARP scanning uses Address Resolution Protocol to discover hosts on local networks. The flags serve specific purposes:
-- `-sn`: Disables port scanning, focusing purely on host discovery
+ARP scanning operates at the Data Link Layer, sending ARP requests to discover local network hosts. The command flags serve these purposes:
+- `-sn`: Disables port scanning, focusing purely on host discovery 
 - `-PR`: Activates ARP scan mode for sending ARP requests
 - `$1`: Represents the subnet argument provided by the user
 
@@ -21,7 +21,7 @@ ARP scanning uses Address Resolution Protocol to discover hosts on local network
 sudo nmap -sn -PE $1
 ```
 
-ICMP Echo scanning employs the traditional ping mechanism. The script uses these flags:
+ICMP Echo scanning employs the traditional ping mechanism at the Network Layer. The script uses these flags:
 - `-sn`: Performs host discovery without port scanning
 - `-PE`: Enables ICMP Echo scanning mode
 - `$1`: Takes the subnet argument for scanning
@@ -32,7 +32,7 @@ ICMP Echo scanning employs the traditional ping mechanism. The script uses these
 sudo nmap -sn -PP $1
 ```
 
-ICMP Timestamp scanning utilizes a different type of ICMP message. The script includes:
+ICMP Timestamp scanning utilizes timestamp requests at the Network Layer. The script includes:
 - `-sn`: Restricts scanning to host discovery
 - `-PP`: Activates ICMP Timestamp scanning
 - `$1`: Accepts the target subnet as an argument
@@ -43,7 +43,7 @@ ICMP Timestamp scanning utilizes a different type of ICMP message. The script in
 sudo nmap -sn -PM $1
 ```
 
-ICMP Address Mask scanning represents another ICMP variant. The script uses:
+ICMP Address Mask scanning uses mask requests at the Network Layer. The script employs:
 - `-sn`: Limits the scan to host discovery
 - `-PM`: Enables ICMP Address Mask scanning
 - `$1`: Receives the subnet parameter
@@ -54,20 +54,30 @@ ICMP Address Mask scanning represents another ICMP variant. The script uses:
 sudo nmap -sn -PS22,80,443 $1
 ```
 
-This script introduces TCP SYN Ping scanning, a more sophisticated approach that uses TCP protocol. The flags serve specific purposes:
-- `-sn`: Disables port scanning, focusing purely on host discovery
-- `-PS22,80,443`: Activates TCP SYN Ping scanning specifically targeting ports 22 (SSH), 80 (HTTP), and 443 (HTTPS)
-- `$1`: Represents the subnet argument provided by the user
+TCP SYN Ping scanning operates at the Transport Layer, sending SYN packets to common ports. The flags indicate:
+- `-sn`: Disables port scanning for focused host discovery
+- `-PS22,80,443`: Performs TCP SYN Ping scanning on ports 22, 80, and 443
+- `$1`: Takes the subnet argument
+
+### 6. TCP ACK Ping Scanning (5-tcp_ack_ping.sh)
+```bash
+#!/bin/bash
+sudo nmap -sn -PA22,80,443 $1
+```
+
+TCP ACK Ping scanning uses ACK packets at the Transport Layer. The command uses:
+- `-sn`: Ensures scan focuses on host discovery
+- `-PA22,80,443`: Activates TCP ACK Ping scanning on specified ports
+- `$1`: Represents the target subnet
 
 ## Understanding the Scanning Methods
 
 ### ARP Scanning
-Operating at Layer 2 (Data Link Layer), ARP scanning works by sending ARP requests within a local network segment. This method:
-- Provides the fastest scanning on local networks
-- Reveals MAC addresses of responding hosts
-- Works only within the same subnet
-- Generates minimal network traffic
-- Typically provides the most accurate results for local network mapping
+Operating at Layer 2, ARP scanning works by sending ARP requests within a local network segment. This method excels in local network discovery by:
+- Providing rapid host detection within the same subnet
+- Revealing MAC addresses of responding hosts
+- Generating minimal network overhead
+- Offering the highest accuracy for local network mapping
 
 Example output:
 ```
@@ -81,12 +91,11 @@ Nmap done: 256 IP addresses (2 hosts up) scanned in 2.03 seconds
 ```
 
 ### ICMP Echo Scanning
-Working at Layer 3 (Network Layer), ICMP Echo scanning sends traditional ping requests. This method:
-- Functions across different network segments
-- Uses widely supported ICMP Echo messages
-- May be blocked by firewalls
-- Provides reliable host discovery when ICMP traffic is allowed
-- Works similarly to standard ping but more efficiently
+Working at Layer 3, ICMP Echo scanning sends traditional ping requests across network boundaries. This method provides:
+- Cross-subnet scanning capabilities
+- Wide compatibility with most network devices
+- Simple yet effective host discovery
+- Similar functionality to standard ping but with greater efficiency
 
 Example output:
 ```
@@ -97,12 +106,11 @@ Nmap done: 256 IP addresses (1 host up) scanned in 19.03 seconds
 ```
 
 ### ICMP Timestamp Scanning
-Also operating at Layer 3, ICMP Timestamp scanning uses timestamp request messages. This technique:
-- May bypass firewalls that block Echo requests
-- Provides an alternative when standard ping is filtered
-- Often receives different responses than Echo requests
-- Can reveal hosts that don't respond to regular pings
-- Usually takes slightly longer than Echo scanning
+Also at Layer 3, this method sends timestamp requests which may bypass certain firewall rules. Benefits include:
+- Alternative path when Echo requests are blocked
+- Potential detection of hosts that filter standard pings
+- Additional network mapping capabilities through timing information
+- Generally good response rates from active hosts
 
 Example output:
 ```
@@ -113,12 +121,11 @@ Nmap done: 256 IP addresses (1 host up) scanned in 19.93 seconds
 ```
 
 ### ICMP Address Mask Scanning
-This Layer 3 scanning method uses ICMP Address Mask requests. The technique:
-- Employs a less common ICMP message type
-- Might reveal subnet configuration details
-- Often receives fewer responses than other methods
-- Can bypass certain firewall rules
-- Takes longer to complete than other scanning methods
+This Layer 3 method uses mask requests to discover hosts and potentially gather subnet information. Key characteristics include:
+- Less common ICMP message type that might bypass filters
+- Potential to reveal network configuration details
+- Often receives fewer responses than other ICMP methods
+- Useful in specific network environments
 
 Example output:
 ```
@@ -127,20 +134,11 @@ Nmap done: 254 IP address (0 hosts up) scanned in 53.01 seconds
 ```
 
 ### TCP SYN Ping Scanning
-Moving up to Layer 4 (Transport Layer) of the OSI model, TCP SYN Ping scanning takes a more sophisticated approach to host discovery. This method sends TCP SYN packets to specific ports and analyzes the responses. When we target common service ports like 22 (SSH), 80 (HTTP), and 443 (HTTPS), we increase our chances of discovering active hosts.
-
-This technique works by:
-- Sending TCP SYN packets to chosen ports (in our case, 22, 80, and 443)
-- Looking for SYN-ACK responses that indicate an active host
-- Also registering RST packets that might come from hosts with closed ports
-- Operating at a higher protocol layer than ICMP-based methods
-- Potentially bypassing firewalls that block ICMP traffic
-
-The advantages of this method include:
-- Ability to work when ICMP traffic is blocked
-- Higher success rate when scanning servers (which usually have these ports open)
-- More subtle than ICMP scanning in some cases
-- Can provide additional information about port status even during host discovery
+Operating at Layer 4, this method sends SYN packets to commonly used ports. The technique offers:
+- Effectiveness when ICMP is blocked
+- Higher success rates with servers running common services
+- Additional insight into potential service availability
+- Good balance between stealth and effectiveness
 
 Example output:
 ```
@@ -150,30 +148,39 @@ Host is up (0.12s latency).
 Nmap done: 256 IP addresses (1 host up) scanned in 22.42 seconds
 ```
 
-This output shows a successful discovery of a host that responded to our TCP SYN Ping probes. The latency of 0.12 seconds is typical for TCP-based scanning, which often takes slightly longer than simpler protocols like ARP or ICMP.
+### TCP ACK Ping Scanning
+This Layer 4 technique uses ACK packets to detect hosts, offering several advantages:
+- Enhanced stealth compared to SYN ping
+- Better success at bypassing stateless firewalls
+- Reliable operation across various operating systems
+- Effectiveness when other scanning methods fail
+
+Example output:
+```
+Starting Nmap 7.93 ( https://nmap.org ) at 2023-05-10 15:15 CDT
+Nmap done: 256 IP addresses (0 hosts up) scanned in 154.50 seconds
+```
 
 ## Usage
 
-To use any of these scripts:
+For any of these scripts:
 
 1. Make the script executable:
    ```bash
    chmod +x script_name.sh
    ```
 
-2. Run the script with a subnet argument:
+2. Run with a subnet argument:
    ```bash
    ./script_name.sh 192.168.1.0/24
    ```
-
-Each script will request sudo privileges if needed and display discovered hosts in the specified subnet.
 
 ## Prerequisites
 
 - Linux-based operating system
 - Nmap installed on your system
 - Root privileges or sudo access
-- Basic understanding of networking concepts
+- Basic understanding of networking concepts and protocols
 - Permission to perform network scanning on the target network
 
 ## Repository Structure
@@ -186,6 +193,7 @@ Each script will request sudo privileges if needed and display discovered hosts 
   - `2-icmp_timestamp_scan.sh`: ICMP Timestamp scanning script
   - `3-icmp_address_mask_scan.sh`: ICMP Address Mask scanning script
   - `4-tcp_syn_ping.sh`: TCP SYN Ping scanning script
+  - `5-tcp_ack_ping.sh`: TCP ACK Ping scanning script
   - `README.md`: Documentation file
 
 Note: These scripts are intended for educational purposes and should only be used on networks where you have explicit permission to perform scanning activities.
