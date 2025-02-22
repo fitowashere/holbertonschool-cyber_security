@@ -1,2 +1,2 @@
 #!/bin/bash
-find $1 -type f -perm /4000 -ls 2>/dev/null
+find "$1" -perm -u=s -type f 2>/dev/null -exec ls -l {} \;
