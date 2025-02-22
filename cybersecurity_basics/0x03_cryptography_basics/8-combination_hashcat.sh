@@ -1,2 +1,2 @@
 #!/bin/bash
-while read -r a; do while read -r b; do echo "$a$b"; done < "$2"; done < "$1"
+hashcat --stdout -a 1 $1 $2
