@@ -1,2 +1,2 @@
 #!/bin/bash
-echo "SELinux status:                 $(getenforce 2>/dev/null | tr '[:upper:]' '[:lower:]' || echo "disabled")"
+sestatus | grep -i "SELinux status:" | sed 's/SELinux status:\s*/SELinux status:                 /'
