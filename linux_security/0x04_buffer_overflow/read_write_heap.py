@@ -21,15 +21,33 @@ def parse_maps_file(pid):
     """
     try:
         maps_filename = "/proc/{}/maps".format(pid)
+        print("[*] maps: {}".format(maps_filename))
+
         with open(maps_filename, 'r') as maps_file:
             for line in maps_file:
                 if "[heap]" in line:
-                    # Extract addresses from line that looks like:
-                    # address_start-address_end permissions offset ...
-                    addresses = line.split()[0]
+                    # Print detailed information about the heap
+                    print("[*] Found [heap]:")
+
+                    # Split the line into fields
+                    fields = line.split()
+                    addresses = fields[0]
+                    permissions = fields[1]
+                    offset = fields[2]
+                    inode = fields[4]
+
+                    print("\tpathname = [heap]")
+                    print("\taddresses = {}".format(addresses))
+                    print("\tpermissions = {}".format(permissions))
+                    print("\toffset = {}".format(offset))
+                    print("\tinode = {}".format(inode))
+
+                    # Extract start and end addresses
                     start_address, end_address = addresses.split('-')
-                    # Convert from hex string to int
-                    return (int(start_address, 16), int(end_address, 16))
+                    start_address = int(start_address, 16)
+                    end_address = int(end_address, 16)
+
+                    return (start_address, end_address)
     except IOError as e:
         print("Error: Can't open {} - {}".format(maps_filename, e))
         sys.exit(1)
@@ -45,6 +63,8 @@ def read_memory(pid, start_address, end_address):
     """
     try:
         mem_filename = "/proc/{}/mem".format(pid)
+        print("[*] mem: {}".format(mem_filename))
+
         with open(mem_filename, 'rb+') as mem_file:
             # Seek to the start address of the heap
             mem_file.seek(start_address)
@@ -64,6 +84,8 @@ def write_to_memory(pid, address, data):
         with open(mem_filename, 'rb+') as mem_file:
             mem_file.seek(address)
             mem_file.write(data)
+            print("[*] Writing '{}' at {}".format(
+                data.decode('ASCII'), hex(address)))
             return True
     except IOError as e:
         print("Error: Can't write to {} - {}".format(mem_filename, e))
@@ -98,8 +120,8 @@ def main():
 
     # Get heap address range
     start_address, end_address = parse_maps_file(pid)
-    print("[*] Heap found at: 0x{:x} - 0x{:x}".format(
-        start_address, end_address))
+    print("[*] Addr start [{}] | end [{}]".format(
+        hex(start_address), hex(end_address)))
 
     # Read memory from the heap
     heap_memory = read_memory(pid, start_address, end_address)
@@ -109,8 +131,8 @@ def main():
     replace_bytes = replace_string.encode('ASCII')
 
     # Pad the replace bytes to match the length of search bytes
-    replace_bytes_padded = replace_bytes + b'\0' * (
-        len(search_bytes) - len(replace_bytes))
+    replace_bytes_padded = replace_bytes + b'\0' * (len(
+        search_bytes) - len(replace_bytes))
 
     # Find all occurrences of the search string
     position = heap_memory.find(search_bytes)
@@ -120,13 +142,10 @@ def main():
 
     # Calculate the actual address in the process memory
     target_address = start_address + position
-    print("[*] Found '{}' at 0x{:x}".format(
-        search_string, target_address))
+    print("[*] Found '{}' at {}".format(search_string, position))
 
     # Write the replace string to the process memory
-    if write_to_memory(pid, target_address, replace_bytes_padded):
-        print("[*] Successfully replaced '{}' with '{}'".format(
-            search_string, replace_string))
+    write_to_memory(pid, target_address, replace_bytes_padded)
 
 
 if __name__ == "__main__":
