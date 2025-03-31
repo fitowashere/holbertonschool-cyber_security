@@ -91,11 +91,6 @@ def main():
         print("Error: Strings cannot be empty")
         print_usage_and_exit()
 
-    # Check if the replace string is longer than the search string
-    if len(replace_string) > len(search_string):
-        print("Error: Replace string cannot be longer than search string")
-        sys.exit(1)
-
     # Get heap address range
     start_address, end_address = parse_maps_file(pid)
     print("[*] Heap found at: 0x{:x} - 0x{:x}".format(
@@ -108,9 +103,13 @@ def main():
     search_bytes = search_string.encode('ASCII')
     replace_bytes = replace_string.encode('ASCII')
 
-    # Pad the replace bytes to match the length of search bytes
-    replace_bytes_padded = replace_bytes + b'\0' * (
-        len(search_bytes) - len(replace_bytes))
+    # Pad the replace bytes to match the length of search bytes if shorter
+    # or truncate if longer
+    if len(replace_bytes) < len(search_bytes):
+        replace_bytes_padded = replace_bytes + b'\0' * (
+            len(search_bytes) - len(replace_bytes))
+    else:
+        replace_bytes_padded = replace_bytes[:len(search_bytes)]
 
     # Find all occurrences of the search string
     position = heap_memory.find(search_bytes)
