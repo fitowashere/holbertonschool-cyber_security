@@ -102,13 +102,9 @@ def main():
     search_bytes = search_string.encode('ASCII')
     replace_bytes = replace_string.encode('ASCII')
 
-    # Pad the replace bytes to match the length of search bytes if shorter
-    # or truncate if longer
-    if len(replace_bytes) < len(search_bytes):
-        replace_bytes_padded = replace_bytes + b'\0' * (
-            len(search_bytes) - len(replace_bytes))
-    else:
-        replace_bytes_padded = replace_bytes[:len(search_bytes)]
+    # Use the replacement bytes as-is, regardless of length
+    # This allows replacing with longer strings without truncation
+    replace_bytes_padded = replace_bytes
 
     # Find all occurrences of the search string
     position = heap_memory.find(search_bytes)
