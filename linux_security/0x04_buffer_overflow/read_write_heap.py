@@ -86,15 +86,14 @@ def main():
     search_string = sys.argv[2]
     replace_string = sys.argv[3]
 
-    # Validate search string (replace string can be empty)
-    if len(search_string) < 1:
-        print("Error: Search string cannot be empty")
+    # Validate strings
+    if len(search_string) < 1 or len(replace_string) < 1:
+        print("Error: Strings cannot be empty")
         print_usage_and_exit()
 
     # Get heap address range
     start_address, end_address = parse_maps_file(pid)
-    print("[*] Heap found at: 0x{:x} - 0x{:x}".format(
-        start_address, end_address))
+    # Removed print statement for heap location
 
     # Read memory from the heap
     heap_memory = read_memory(pid, start_address, end_address)
@@ -103,9 +102,13 @@ def main():
     search_bytes = search_string.encode('ASCII')
     replace_bytes = replace_string.encode('ASCII')
 
-    # We want to directly use the replace bytes without modification
-    # No padding with null bytes, no length check
-    replace_bytes_padded = replace_bytes
+    # Pad the replace bytes to match the length of search bytes if shorter
+    # or truncate if longer
+    if len(replace_bytes) < len(search_bytes):
+        replace_bytes_padded = replace_bytes + b'\0' * (
+            len(search_bytes) - len(replace_bytes))
+    else:
+        replace_bytes_padded = replace_bytes[:len(search_bytes)]
 
     # Find all occurrences of the search string
     position = heap_memory.find(search_bytes)
@@ -114,14 +117,12 @@ def main():
         sys.exit(1)
 
     # Calculate the actual address in the process memory
-    # target_address = start_address + position
-    # print("[*] Found '{}' at 0x{:x}".format(
-    #   search_string, target_address))
+    target_address = start_address + position
+    # Removed print statement for string found
 
     # Write the replace string to the process memory
-    # if write_to_memory(pid, target_address, replace_bytes_padded):
-    #    print("[*] Successfully replaced '{}' with '{}'".format(
-    #        search_string, replace_string))
+    write_to_memory(pid, target_address, replace_bytes_padded)
+    # Removed print statement for successful replacement
 
 
 if __name__ == "__main__":
