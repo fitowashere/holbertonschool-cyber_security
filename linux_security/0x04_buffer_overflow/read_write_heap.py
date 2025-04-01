@@ -92,9 +92,9 @@ def main():
         print_usage_and_exit()
 
     # Get heap address range
-    start_address, end_address = parse_maps_file(pid)
-    print("[*] Heap found at: 0x{:x} - 0x{:x}".format(
-        start_address, end_address))
+    #start_address, end_address = parse_maps_file(pid)
+    #print("[*] Heap found at: 0x{:x} - 0x{:x}".format(
+    #   start_address, end_address))
 
     # Read memory from the heap
     heap_memory = read_memory(pid, start_address, end_address)
@@ -114,14 +114,14 @@ def main():
         sys.exit(1)
 
     # Calculate the actual address in the process memory
-    target_address = start_address + position
-    print("[*] Found '{}' at 0x{:x}".format(
-        search_string, target_address))
+    #target_address = start_address + position
+    #print("[*] Found '{}' at 0x{:x}".format(
+    #   search_string, target_address))
 
     # Write the replace string to the process memory
-    if write_to_memory(pid, target_address, replace_bytes_padded):
-        print("[*] Successfully replaced '{}' with '{}'".format(
-            search_string, replace_string))
+    #if write_to_memory(pid, target_address, replace_bytes_padded):
+    #    print("[*] Successfully replaced '{}' with '{}'".format(
+    #        search_string, replace_string))
 
 
 if __name__ == "__main__":
