@@ -114,12 +114,12 @@ def main():
         sys.exit(1)
 
     # Calculate the actual address in the process memory
-    #target_address = start_address + position
-    #print("[*] Found '{}' at 0x{:x}".format(
+    # target_address = start_address + position
+    # print("[*] Found '{}' at 0x{:x}".format(
     #   search_string, target_address))
 
     # Write the replace string to the process memory
-    #if write_to_memory(pid, target_address, replace_bytes_padded):
+    # if write_to_memory(pid, target_address, replace_bytes_padded):
     #    print("[*] Successfully replaced '{}' with '{}'".format(
     #        search_string, replace_string))
 
