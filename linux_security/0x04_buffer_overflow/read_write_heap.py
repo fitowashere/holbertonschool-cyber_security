@@ -92,9 +92,9 @@ def main():
         print_usage_and_exit()
 
     # Get heap address range
-    #start_address, end_address = parse_maps_file(pid)
-    #print("[*] Heap found at: 0x{:x} - 0x{:x}".format(
-    #   start_address, end_address))
+    start_address, end_address = parse_maps_file(pid)
+    print("[*] Heap found at: 0x{:x} - 0x{:x}".format(
+        start_address, end_address))
 
     # Read memory from the heap
     heap_memory = read_memory(pid, start_address, end_address)
