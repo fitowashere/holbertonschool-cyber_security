@@ -86,9 +86,9 @@ def main():
     search_string = sys.argv[2]
     replace_string = sys.argv[3]
 
-    # Validate strings
-    if len(search_string) < 1 or len(replace_string) < 1:
-        print("Error: Strings cannot be empty")
+    # Validate search string (replace string can be empty)
+    if len(search_string) < 1:
+        print("Error: Search string cannot be empty")
         print_usage_and_exit()
 
     # Get heap address range
