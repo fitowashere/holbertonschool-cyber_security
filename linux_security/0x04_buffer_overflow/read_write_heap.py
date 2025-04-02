@@ -86,9 +86,10 @@ def main():
     search_string = sys.argv[2]
     replace_string = sys.argv[3]
 
-    # Validate strings
-    if len(search_string) < 1 or len(replace_string) < 1:
-        print("Error: Strings cannot be empty")
+    # Validate strings - search string cannot be empty
+    # But replace string CAN be empty (this is a valid use case)
+    if len(search_string) < 1:
+        print("Error: Search string cannot be empty")
         print_usage_and_exit()
 
     # Get heap address range
@@ -102,9 +103,13 @@ def main():
     search_bytes = search_string.encode('ASCII')
     replace_bytes = replace_string.encode('ASCII')
 
-    # Use the replacement bytes as-is, regardless of length
-    # This allows replacing with longer strings without truncation
-    replace_bytes_padded = replace_bytes
+    # Pad the replace bytes to match the length of search bytes if shorter
+    # or truncate if longer
+    if len(replace_bytes) < len(search_bytes):
+        replace_bytes_padded = replace_bytes + b'\0' * (
+            len(search_bytes) - len(replace_bytes))
+    else:
+        replace_bytes_padded = replace_bytes[:len(search_bytes)]
 
     # Find all occurrences of the search string
     position = heap_memory.find(search_bytes)
