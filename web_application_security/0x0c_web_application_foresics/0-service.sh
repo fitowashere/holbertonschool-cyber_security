@@ -1,4 +1,2 @@
 #!/bin/bash
-
-# Scan logs for service information and count occurrences
-grep -o "pam_unix([^:]*" /var/log/auth.log | sort | uniq -c | sort -nr
+grep "sshd" auth.log | awk '{for (i=1; i<=NF; i++) count[$i]++} END {for (word in count) print count[word], word | "sort -nr"}'
