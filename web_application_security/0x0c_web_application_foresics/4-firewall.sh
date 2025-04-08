@@ -1,2 +1,2 @@
 #!/bin/bash
-grep -c "firewall.*added" auth.log
+grep -E "firewall|iptables|ufw|pf|netfilter|RULE" auth.log | grep -iE "add|append|new|create" | wc -l
