@@ -1,2 +1,2 @@
 #!/bin/bash
-nmap --script=vulners -sV $1
+nmap --script=default -sV $1
