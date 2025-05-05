@@ -1,21 +1,18 @@
 #!/usr/bin/env ruby
 require 'optparse'
 
-# Task file path
-TASKS_FILE = 'tasks.txt'
-
-# Initialize tasks array
+# Load tasks from the file
 def load_tasks
-  if File.exist?(TASKS_FILE)
-    File.readlines(TASKS_FILE).map(&:chomp)
+  if File.exist?('tasks.txt')
+    File.readlines('tasks.txt').map(&:chomp)
   else
     []
   end
 end
 
-# Save tasks to file
+# Save tasks to the file
 def save_tasks(tasks)
-  File.open(TASKS_FILE, 'w') do |file|
+  File.open('tasks.txt', 'w') do |file|
     tasks.each { |task| file.puts(task) }
   end
 end
@@ -32,27 +29,26 @@ end
 def list_tasks
   tasks = load_tasks
   if tasks.empty?
-    puts "No tasks found."
+    puts "No tasks available."
   else
-    tasks.each_with_index do |task, index|
-      puts "#{index + 1}. #{task}"
-    end
+    puts "Tasks:"
+    tasks.each_with_index { |task, index| puts "#{index + 1}. #{task}" }
   end
 end
 
 # Remove a task by index
 def remove_task(index)
   tasks = load_tasks
-  if index < 1 || index > tasks.length
-    puts "Invalid task index."
-  else
+  if index.between?(1, tasks.length)
     removed_task = tasks.delete_at(index - 1)
     save_tasks(tasks)
     puts "Task '#{removed_task}' removed."
+  else
+    puts "Invalid task index."
   end
 end
 
-# Parse command-line options
+# Command-line options and argument parsing
 options = {}
 OptionParser.new do |opts|
   opts.banner = "Usage: cli.rb [options]"
@@ -65,8 +61,8 @@ OptionParser.new do |opts|
     options[:list] = true
   end
 
-  opts.on("-r", "--remove INDEX", Integer, "Remove a task by index") do |index|
-    options[:remove] = index
+  opts.on("-r", "--remove INDEX", "Remove a task by index") do |index|
+    options[:remove] = index.to_i
   end
 
   opts.on("-h", "--help", "Show help") do
@@ -75,7 +71,7 @@ OptionParser.new do |opts|
   end
 end.parse!
 
-# Execute the appropriate action based on options
+# Process options
 if options[:add]
   add_task(options[:add])
 elsif options[:list]
@@ -83,5 +79,5 @@ elsif options[:list]
 elsif options[:remove]
   remove_task(options[:remove])
 else
-  puts "No action specified. Use -h or --help for usage information."
+  puts "Usage: cli.rb [options]"
 end
