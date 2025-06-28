@@ -1,0 +1,1 @@
+1 cat /root/flag.txt 
